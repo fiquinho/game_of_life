@@ -78,8 +78,6 @@ class Board(object):
         else:
             self.active_cells.remove(CellPosition(cell_x, cell_y))
 
-        print(self.active_cells)
-
     def get_alive_neighbours(self, position: CellPosition) -> int:
         alive_neighbours = 0
         for neighbour in CellPosition.get_neighbours(position):

@@ -10,6 +10,8 @@ class Colors:
     IRIS = (67, 77, 223)
     BLUE_JEANS = (67, 175, 252)
     YELLOW = (255, 217, 128)
+    GREEN = (57, 255, 20)
+    ORANGE = (255, 165, 0)
 
 
 class Cell(object):

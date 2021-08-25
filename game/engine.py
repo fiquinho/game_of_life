@@ -8,7 +8,7 @@ from .board import Board
 from .menu import Menu
 
 
-GAME_WINDOW = (500, 400)
+GAME_WINDOW = (900, 600)
 MENU_WINDOW = (100, GAME_WINDOW[1])
 BOARD_WINDOW = (GAME_WINDOW[0] - MENU_WINDOW[0], GAME_WINDOW[1])
 
@@ -49,7 +49,7 @@ class Engine(object):
         self.menu.render(self.window, position=(0, 0))
         pygame.display.update()
 
-    def handle_click(self, x:int, y: int):
+    def handle_click(self, x: int, y: int):
         if x < MENU_WINDOW[0]:
             if self.menu.handle_click(x, y):
                 self.stopped_time = not self.stopped_time

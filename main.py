@@ -2,8 +2,8 @@ from game import Engine, GameConfig
 
 
 def main():
-    board_width = 20
-    board_height = 20
+    board_width = 40
+    board_height = 30
     cell_side = 20
     fps = 60
 
