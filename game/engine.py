@@ -5,7 +5,7 @@ import pygame
 from dataclasses import dataclass
 
 from .board import Board
-from .menu import Menu
+from .menu import Menu, Actions
 
 
 GAME_WINDOW = (900, 600)
@@ -44,6 +44,23 @@ class Engine(object):
         self.board = Board(columns=self.config.board_width, rows=self.config.board_height,
                            cell_side=self.config.cell_side, window_size=BOARD_WINDOW)
 
+    @property
+    def actions(self):
+        return {Actions.PLAY: self.change_state,
+                Actions.STOP: self.change_state,
+                Actions.CHANGE_STATE: self.change_state,
+                Actions.NONE: self.none_action,
+                Actions.CLEAR: self.clear_board}
+
+    def change_state(self):
+        self.stopped_time = not self.stopped_time
+
+    def none_action(self):
+        pass
+
+    def clear_board(self):
+        self.board.reset()
+
     def render(self):
         self.board.render(self.window, position=(MENU_WINDOW[0], 0))
         self.menu.render(self.window, position=(0, 0))
@@ -51,8 +68,8 @@ class Engine(object):
 
     def handle_click(self, x: int, y: int):
         if x < MENU_WINDOW[0]:
-            if self.menu.handle_click(x, y):
-                self.stopped_time = not self.stopped_time
+            action = self.menu.handle_click(x, y)
+            self.actions[action]()
         else:
             if self.stopped_time:
                 board_x = x - MENU_WINDOW[0]
@@ -76,8 +93,7 @@ class Engine(object):
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
                     self.handle_click(event.pos[0], event.pos[1])
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    # self.board.update_state()
-                    self.stopped_time = not self.stopped_time
+                    self.change_state()
 
             if not self.stopped_time:
 

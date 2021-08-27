@@ -60,6 +60,10 @@ class Board(object):
 
         self.active_cells: Set[CellPosition] = set()
 
+    def reset(self):
+        for cell_position in self.active_cells:
+            self.board[cell_position.as_tuple()].die()
+
     def render(self, window: Surface, position: Tuple[int, int]):
 
         [[cell.render(self.window) for cell in column] for column in self.board]
