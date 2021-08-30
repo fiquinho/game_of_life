@@ -6,11 +6,13 @@ from .cell import Colors
 
 
 class Actions(object):
-    PLAY = "Play"
-    STOP = "Stop"
+    PLAY = "play"
+    STOP = "stop"
     CHANGE_STATE = "change_state"
     CLEAR = "clear"
     NONE = None
+    LOAD_BOARD = "load_board"
+    SAVE_BOARD = "save_board"
 
 
 class MenuLayout(object):
@@ -38,11 +40,11 @@ class GameEntity(object):
         return self.surface.get_rect()
 
 
-class ClearButton(GameEntity):
+class TextButton(GameEntity):
 
-    def __init__(self):
-
+    def __init__(self, text: str):
         super().__init__(MenuLayout.CLEAR_BUTTON_SIZE)
+        self.text = text
         self.update()
 
     def update(self):
@@ -54,7 +56,7 @@ class ClearButton(GameEntity):
         font = pygame.font.Font(pygame.font.get_default_font(), MenuLayout.FONT_SIZE)
 
         # now print the text
-        text_surface = font.render('Clear', True, Colors.GREEN)
+        text_surface = font.render(self.text, True, Colors.GREEN)
         text_surface_rect = text_surface.get_rect()
         text_surface_x = (self.width - text_surface_rect[2]) // 2
         text_surface_y = (self.height - text_surface_rect[3]) // 2
@@ -101,9 +103,17 @@ class Menu(GameEntity):
         self.play_button_pos = ((self.width - self.play_button.width) // 2, 15)
         self.play_button.draw(self.surface, self.play_button_pos)
 
-        self.clear_button = ClearButton()
+        self.clear_button = TextButton("Clear")
         self.clear_button_pos = ((self.width - self.clear_button.width) // 2, 100)
         self.clear_button.draw(self.surface, self.clear_button_pos)
+
+        self.load_button = TextButton("Load")
+        self.load_button_pos = ((self.width - self.load_button.width) // 2, 145)
+        self.load_button.draw(self.surface, self.load_button_pos)
+
+        self.save_button = TextButton("Save")
+        self.save_button_pos = ((self.width - self.save_button.width) // 2, 190)
+        self.save_button.draw(self.surface, self.save_button_pos)
 
     def render(self, window: pygame.Surface, position: Tuple[int]):
         """Render element to screen"""
@@ -117,5 +127,9 @@ class Menu(GameEntity):
             return Actions.CHANGE_STATE
         elif self.clear_button.surface.get_rect(topleft=self.clear_button_pos).collidepoint((x, y)):
             return Actions.CLEAR
+        elif self.load_button.surface.get_rect(topleft=self.load_button_pos).collidepoint((x, y)):
+            return Actions.LOAD_BOARD
+        elif self.save_button.surface.get_rect(topleft=self.save_button_pos).collidepoint((x, y)):
+            return Actions.SAVE_BOARD
         else:
             return Actions.NONE

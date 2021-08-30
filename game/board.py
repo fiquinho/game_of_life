@@ -1,4 +1,6 @@
+import csv
 from typing import Tuple, Set, Dict
+from pathlib import Path
 
 import numpy as np
 from pygame import Surface
@@ -115,3 +117,27 @@ class Board(object):
                 new_alive.add(cell_position)
 
         self.active_cells = new_alive
+
+    def load_board(self, board_file: Path):
+        self.reset()
+        with open(board_file, "r", newline="") as f:
+            reader = csv.reader(f)
+
+            for y, row in enumerate(reader):
+                for x, value in enumerate(row):
+                    if value == "1":
+                        self.board[(x, y)].populate()
+                        self.active_cells.add(CellPosition(x, y))
+
+    def save_board(self, board_file: Path):
+        with open(board_file, "w", newline="") as f:
+            writer = csv.writer(f)
+
+            for y in range(self.rows):
+                write_row = []
+                for x in range(self.columns):
+                    if self.board[(x, y)].is_alive():
+                        write_row.append("1")
+                    else:
+                        write_row.append("0")
+                writer.writerow(write_row)

@@ -12,6 +12,12 @@ GAME_WINDOW = (900, 600)
 MENU_WINDOW = (100, GAME_WINDOW[1])
 BOARD_WINDOW = (GAME_WINDOW[0] - MENU_WINDOW[0], GAME_WINDOW[1])
 
+import tkinter as tk
+from tkinter import filedialog
+
+root = tk.Tk()
+root.withdraw()
+
 
 @dataclass
 class GameConfig(object):
@@ -50,10 +56,20 @@ class Engine(object):
                 Actions.STOP: self.change_state,
                 Actions.CHANGE_STATE: self.change_state,
                 Actions.NONE: self.none_action,
-                Actions.CLEAR: self.clear_board}
+                Actions.CLEAR: self.clear_board,
+                Actions.LOAD_BOARD: self.load_board,
+                Actions.SAVE_BOARD: self.save_board}
 
     def change_state(self):
         self.stopped_time = not self.stopped_time
+
+    def save_board(self):
+        board_path = filedialog.asksaveasfilename()
+        self.board.save_board(board_path)
+
+    def load_board(self):
+        board_path = filedialog.askopenfilename()
+        self.board.load_board(board_path)
 
     def none_action(self):
         pass
