@@ -1,11 +1,11 @@
-from typing import Optional, Tuple
+from typing import Optional
 from time import time
 
 import pygame
 from dataclasses import dataclass
 
 from .board import Board
-from .menu import Menu, Actions
+from menu.menu import Menu, Actions
 
 
 GAME_WINDOW = (900, 600)
@@ -52,13 +52,13 @@ class Engine(object):
 
     @property
     def actions(self):
-        return {Actions.PLAY: self.change_state,
-                Actions.STOP: self.change_state,
-                Actions.CHANGE_STATE: self.change_state,
-                Actions.NONE: self.none_action,
-                Actions.CLEAR: self.clear_board,
-                Actions.LOAD_BOARD: self.load_board,
-                Actions.SAVE_BOARD: self.save_board}
+        return {Actions.PLAY.name: self.change_state,
+                Actions.STOP.name: self.change_state,
+                Actions.CHANGE_STATE.name: self.change_state,
+                Actions.NONE.name: self.none_action,
+                Actions.CLEAR.name: self.clear_board,
+                Actions.LOAD_BOARD.name: self.load_board,
+                Actions.SAVE_BOARD.name: self.save_board}
 
     def change_state(self):
         self.stopped_time = not self.stopped_time
@@ -106,7 +106,7 @@ class Engine(object):
                 if event.type == pygame.QUIT:
                     run = False  # Ends the game loop
 
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.handle_click(event.pos[0], event.pos[1])
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.change_state()
@@ -118,4 +118,5 @@ class Engine(object):
                     self.board.update_state()
                     last_update = now
 
+            self.menu.update()
             self.render() if render else None
