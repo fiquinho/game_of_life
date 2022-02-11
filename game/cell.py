@@ -22,7 +22,8 @@ class Cell(object):
         self.position: Tuple[int, int] = position
 
         self.surface = pygame.Surface((side, side))
-        pygame.draw.rect(self.surface, Colors.BLACK, ((0, 0), (side, side)))
+        self.surface.fill(Colors.BLACK)
+        # pygame.draw.rect(self.surface, Colors.BLACK, ((0, 0), (side, side)))
 
         self.cell_surface = pygame.Surface((side - 2, side - 2))
         self.cell_surface.fill(Colors.WHITE)

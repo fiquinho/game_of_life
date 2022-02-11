@@ -40,10 +40,10 @@ class Engine(object):
     def __init__(self, game_config: GameConfig):
         self.config = game_config
         self.window = pygame.display.set_mode(GAME_WINDOW)
-
+        self.current_speed = 5
         self.stopped_time = True
 
-        self.menu = Menu(size=MENU_WINDOW)
+        self.menu = Menu(size=MENU_WINDOW, current_speed=self.current_speed)
 
         pygame.display.set_caption("Game of Life")
 
@@ -65,11 +65,13 @@ class Engine(object):
 
     def save_board(self):
         board_path = filedialog.asksaveasfilename()
-        self.board.save_board(board_path)
+        if board_path != "":
+            self.board.save_board(board_path)
 
     def load_board(self):
         board_path = filedialog.askopenfilename()
-        self.board.load_board(board_path)
+        if board_path != "":
+            self.board.load_board(board_path)
 
     def none_action(self):
         pass
@@ -114,7 +116,7 @@ class Engine(object):
             if not self.stopped_time:
 
                 now = time()
-                if now - last_update >= 0.33:
+                if now - last_update >= 0.2:
                     self.board.update_state()
                     last_update = now
 

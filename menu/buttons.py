@@ -1,4 +1,4 @@
-from abc import abstractmethod, ABCMeta
+from abc import ABCMeta
 
 import pygame
 
@@ -7,10 +7,6 @@ from menu import MenuLayout, GameEntity, Actions
 
 
 class Button(GameEntity, metaclass=ABCMeta):
-
-    @abstractmethod
-    def click(self) -> str:
-        """Handle button being clicked. Returns action to be performed."""
 
     def generate_border(self):
         """Adds background color and a border to the surface"""
@@ -25,7 +21,7 @@ class TextButton(Button):
     def __init__(self, text: str, action: str):
         self.text = text
         self.action = action
-        self.font = pygame.font.Font(pygame.font.get_default_font(), MenuLayout.FONT_SIZE)
+        self.font = pygame.font.Font(MenuLayout.FONT_FILE, MenuLayout.FONT_SIZE)
         super().__init__(MenuLayout.TEXT_BUTTON_SIZE)
 
     def click(self) -> str:

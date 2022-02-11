@@ -27,19 +27,19 @@ class CellPosition(object):
     def as_tuple(self) -> Tuple[int, int]:
         return self.x, self.y
 
-    @classmethod
-    def get_neighbours(cls, cell: 'CellPosition') -> Set['CellPosition']:
-        neighbours: Set[CellPosition] = {
-            cls(cell.x - 1, cell.y - 1),
-            cls(cell.x, cell.y - 1),
-            cls(cell.x + 1, cell.y - 1),
-            cls(cell.x + 1, cell.y),
-            cls(cell.x + 1, cell.y + 1),
-            cls(cell.x, cell.y + 1),
-            cls(cell.x - 1, cell.y + 1),
-            cls(cell.x - 1, cell.y)}        # Left
 
-        return neighbours
+def get_position_neighbours(position: 'CellPosition') -> Set['CellPosition']:
+    neighbours: Set[CellPosition] = {
+        CellPosition(position.x - 1, position.y - 1),
+        CellPosition(position.x, position.y - 1),
+        CellPosition(position.x + 1, position.y - 1),
+        CellPosition(position.x + 1, position.y),
+        CellPosition(position.x + 1, position.y + 1),
+        CellPosition(position.x, position.y + 1),
+        CellPosition(position.x - 1, position.y + 1),
+        CellPosition(position.x - 1, position.y)}        # Left
+
+    return neighbours
 
 
 class Board(object):
@@ -56,7 +56,8 @@ class Board(object):
         self.window.fill(Colors.BLACK)
 
         self.board: np.array = np.array([
-            [Cell(self.cell_side, (row * cell_side, column * cell_side)) for column in range(rows)]
+            [Cell(self.cell_side, (row * cell_side, column * cell_side))
+             for column in range(rows)]
             for row in range(columns)
         ])
 
@@ -86,7 +87,7 @@ class Board(object):
 
     def get_alive_neighbours(self, position: CellPosition) -> int:
         alive_neighbours = 0
-        for neighbour in CellPosition.get_neighbours(position):
+        for neighbour in get_position_neighbours(position):
             if self.valid_position(neighbour):
                 alive_neighbours += int(self.board[neighbour.as_tuple()].is_alive())
 
@@ -105,7 +106,7 @@ class Board(object):
             if active_cell not in cells_alive_neighbours:
                 cells_alive_neighbours[active_cell] = self.get_alive_neighbours(active_cell)
 
-            for neighbour in CellPosition.get_neighbours(active_cell):
+            for neighbour in get_position_neighbours(active_cell):
                 if neighbour not in cells_alive_neighbours and self.valid_position(neighbour):
                     cells_alive_neighbours[neighbour] = self.get_alive_neighbours(neighbour)
 

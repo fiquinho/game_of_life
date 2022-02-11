@@ -22,9 +22,12 @@ class MenuLayout:
     TEXT_BUTTON_SIZE = (70, 30)
     HELP_BUTTON_SIZE = (40, 40)
     BUTTONS_BORDER = 1
+    FONT_FILE = "game/assets/SourceCodePro-Regular.ttf"
     FONT_SIZE = 18
     BACKGROUND_COLOR = Colors.BLACK
     MAIN_COLOR = Colors.GREEN
+    SPEED_LABEL_SIZE = (70, 25)
+    SPEED_DISPLAY_SIZE = (70, 40)
 
 
 class GameEntity(metaclass=ABCMeta):
@@ -52,3 +55,54 @@ class GameEntity(metaclass=ABCMeta):
     @abstractmethod
     def update(self):
         """Update the surface render of the entity."""
+
+    @abstractmethod
+    def click(self) -> str:
+        """Handle entity being clicked. Returns action to be performed."""
+
+
+class LineSeparator(GameEntity):
+
+    def __init__(self, width: int):
+        self.stopped_mode = True
+        super().__init__((width, 1))
+
+    def click(self) -> str:
+        pass
+
+    def update(self):
+        self.surface.fill(MenuLayout.MAIN_COLOR)
+
+
+class SpeedTitle(GameEntity):
+    def __init__(self):
+        self.font = pygame.font.Font(MenuLayout.FONT_FILE, MenuLayout.FONT_SIZE)
+        super().__init__(MenuLayout.SPEED_LABEL_SIZE)
+
+    def update(self):
+        text_surface = self.font.render("Speed", True, MenuLayout.MAIN_COLOR)
+        text_surface_rect = text_surface.get_rect()
+        text_surface_x = (self.width - text_surface_rect[2]) // 2
+        text_surface_y = (self.height - text_surface_rect[3]) // 2
+        self.surface.blit(text_surface, dest=(text_surface_x, text_surface_y))
+
+    def click(self) -> str:
+        pass
+
+
+class SpeedDisplay(GameEntity):
+
+    def __init__(self, current_speed: int):
+        self.current_speed = current_speed
+        self.font = pygame.font.Font(MenuLayout.FONT_FILE, MenuLayout.SPEED_DISPLAY_SIZE[1])
+        super().__init__(MenuLayout.SPEED_DISPLAY_SIZE)
+
+    def update(self):
+        text_surface = self.font.render(str(self.current_speed), True, MenuLayout.MAIN_COLOR)
+        text_surface_rect = text_surface.get_rect()
+        text_surface_x = (self.width - text_surface_rect[2]) // 2
+        # text_surface_y = (self.height - text_surface_rect[3]) // 2
+        self.surface.blit(text_surface, dest=(text_surface_x, 0))
+
+    def click(self) -> str:
+        pass
