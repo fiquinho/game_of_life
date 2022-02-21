@@ -15,6 +15,11 @@ class Actions(Enum):
     NONE = 4
     LOAD_BOARD = 5
     SAVE_BOARD = 6
+    MIN_SPEED = 7
+    REDUCE_SPEED = 8
+    INCREASE_SPEED = 9
+    MAX_SPEED = 10
+    OPEN_RULES = 11
 
 
 class MenuLayout:
@@ -23,11 +28,13 @@ class MenuLayout:
     HELP_BUTTON_SIZE = (40, 40)
     BUTTONS_BORDER = 1
     FONT_FILE = "game/assets/SourceCodePro-Regular.ttf"
+    SPEED_DISPLAY_FONT = "game/assets/digital-7.mono.ttf"
     FONT_SIZE = 18
     BACKGROUND_COLOR = Colors.BLACK
     MAIN_COLOR = Colors.GREEN
     SPEED_LABEL_SIZE = (70, 25)
     SPEED_DISPLAY_SIZE = (70, 40)
+    SPEED_BUTTONS_SIZE = (35, 25)
 
 
 class GameEntity(metaclass=ABCMeta):
@@ -68,7 +75,7 @@ class LineSeparator(GameEntity):
         super().__init__((width, 1))
 
     def click(self) -> str:
-        pass
+        return Actions.NONE.name
 
     def update(self):
         self.surface.fill(MenuLayout.MAIN_COLOR)
@@ -87,22 +94,22 @@ class SpeedTitle(GameEntity):
         self.surface.blit(text_surface, dest=(text_surface_x, text_surface_y))
 
     def click(self) -> str:
-        pass
+        return Actions.NONE.name
 
 
 class SpeedDisplay(GameEntity):
 
     def __init__(self, current_speed: int):
         self.current_speed = current_speed
-        self.font = pygame.font.Font(MenuLayout.FONT_FILE, MenuLayout.SPEED_DISPLAY_SIZE[1])
+        self.font = pygame.font.Font(MenuLayout.SPEED_DISPLAY_FONT, MenuLayout.SPEED_DISPLAY_SIZE[1])
         super().__init__(MenuLayout.SPEED_DISPLAY_SIZE)
 
     def update(self):
+        self.surface.fill(MenuLayout.BACKGROUND_COLOR)
         text_surface = self.font.render(str(self.current_speed), True, MenuLayout.MAIN_COLOR)
         text_surface_rect = text_surface.get_rect()
         text_surface_x = (self.width - text_surface_rect[2]) // 2
-        # text_surface_y = (self.height - text_surface_rect[3]) // 2
         self.surface.blit(text_surface, dest=(text_surface_x, 0))
 
     def click(self) -> str:
-        pass
+        return Actions.NONE.name

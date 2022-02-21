@@ -1,12 +1,12 @@
 from typing import Optional
 from time import time
+import webbrowser
 
 import pygame
 from dataclasses import dataclass
 
 from .board import Board
-from menu.menu import Menu, Actions
-
+from game.menu import Menu, Actions, SpeedDisplay
 
 GAME_WINDOW = (900, 600)
 MENU_WINDOW = (100, GAME_WINDOW[1])
@@ -41,6 +41,7 @@ class Engine(object):
         self.config = game_config
         self.window = pygame.display.set_mode(GAME_WINDOW)
         self.current_speed = 5
+        self.rules_dir = "https://conwaylife.com/wiki/Conway's_Game_of_Life"
         self.stopped_time = True
 
         self.menu = Menu(size=MENU_WINDOW, current_speed=self.current_speed)
@@ -58,7 +59,39 @@ class Engine(object):
                 Actions.NONE.name: self.none_action,
                 Actions.CLEAR.name: self.clear_board,
                 Actions.LOAD_BOARD.name: self.load_board,
-                Actions.SAVE_BOARD.name: self.save_board}
+                Actions.SAVE_BOARD.name: self.save_board,
+                Actions.MIN_SPEED.name: self.min_speed,
+                Actions.REDUCE_SPEED.name: self.decrease_speed,
+                Actions.INCREASE_SPEED.name: self.increase_speed,
+                Actions.MAX_SPEED.name: self.max_speed,
+                Actions.OPEN_RULES.name: self.open_rules
+                }
+
+    def min_speed(self):
+        self.current_speed = 1
+        self.update_menu_speed()
+
+    def decrease_speed(self):
+        if self.current_speed == 1:
+            return
+        self.current_speed -= 1
+        self.update_menu_speed()
+
+    def increase_speed(self):
+        if self.current_speed == 20:
+            return
+
+        self.current_speed += 1
+        self.update_menu_speed()
+
+    def max_speed(self):
+        self.current_speed = 20
+        self.update_menu_speed()
+
+    def update_menu_speed(self):
+        for _, entity in self.menu.menu_manager.entities.items():
+            if isinstance(entity, SpeedDisplay):
+                entity.current_speed = self.current_speed
 
     def change_state(self):
         self.stopped_time = not self.stopped_time
@@ -75,6 +108,9 @@ class Engine(object):
 
     def none_action(self):
         pass
+
+    def open_rules(self):
+        webbrowser.open(self.rules_dir)
 
     def clear_board(self):
         self.board.reset()
@@ -116,7 +152,7 @@ class Engine(object):
             if not self.stopped_time:
 
                 now = time()
-                if now - last_update >= 0.2:
+                if now - last_update >= 1 / self.current_speed:
                     self.board.update_state()
                     last_update = now
 

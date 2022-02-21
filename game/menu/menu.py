@@ -1,8 +1,9 @@
 from typing import Tuple, Dict
 
 from game.cell import Colors
-from menu import GameEntity, PlayButton, TextButton, Actions, HelpButton
-from menu.menu_utils import LineSeparator, SpeedDisplay, SpeedTitle
+from game.menu import GameEntity, PlayButton, TextButton, Actions, HelpButton
+from game.menu import LineSeparator, SpeedDisplay, SpeedTitle
+from game.menu.buttons import SpeedButton
 
 
 class MenuManager:
@@ -13,17 +14,19 @@ class MenuManager:
         self.occupied_height = 0
         self.entities: Dict[Tuple[int, int], GameEntity] = {}
 
+    def next_vertical_position(self):
+        return self.occupied_height + self.entities_distance
+
     def add_free_entity(self, entity: GameEntity, position: Tuple[int, int]):
         self.entities.update({position: entity})
 
     def add_stacked_entity(self, entity: GameEntity):
         """Adds an entity to the entities stack from top to bottom. It centers the
         entity in the horizontal axis."""
-        next_vertical_position = self.occupied_height + self.entities_distance
-        position = ((self.width - entity.width) // 2, next_vertical_position)
+        position = ((self.width - entity.width) // 2, self.next_vertical_position())
 
         self.add_free_entity(entity, position)
-        self.occupied_height = next_vertical_position + entity.height
+        self.occupied_height = self.next_vertical_position() + entity.height
 
     def handle_click(self, x: int, y: int) -> str:
 
@@ -63,7 +66,26 @@ class Menu(GameEntity):
 
         speed_display = SpeedDisplay(self.current_speed)
         self.menu_manager.add_stacked_entity(speed_display)
-        
+
+        speed_step_controls_height = self.menu_manager.next_vertical_position()
+        reduce_button = SpeedButton("-", Actions.REDUCE_SPEED.name)
+        width_spaces = (width - (2 * reduce_button.width)) // 3
+        reduce_button_pos = (width_spaces, speed_step_controls_height)
+        self.menu_manager.add_free_entity(reduce_button, reduce_button_pos)
+
+        increase_button = SpeedButton("+", Actions.INCREASE_SPEED.name)
+        increase_button_pos = (width_spaces * 2 + increase_button.width, speed_step_controls_height)
+        self.menu_manager.add_free_entity(increase_button, increase_button_pos)
+
+        speed_full_controls_height = speed_step_controls_height + reduce_button.height + width_spaces
+        min_button = SpeedButton("min", Actions.MIN_SPEED.name)
+        min_button_pos = (width_spaces, speed_full_controls_height)
+        self.menu_manager.add_free_entity(min_button, min_button_pos)
+
+        max_button = SpeedButton("max", Actions.MAX_SPEED.name)
+        max_button_pos = (width_spaces * 2 + increase_button.width, speed_full_controls_height)
+        self.menu_manager.add_free_entity(max_button, max_button_pos)
+
         help_button = HelpButton()
         help_button_pos = ((width - help_button.width) // 2, 530)
         self.menu_manager.add_free_entity(help_button, help_button_pos)
@@ -74,6 +96,7 @@ class Menu(GameEntity):
         self.surface.fill(Colors.BLACK)
 
         for position, entity in self.menu_manager.entities.items():
+            entity.update()
             entity.render(self.surface, position)
     
     def click(self):

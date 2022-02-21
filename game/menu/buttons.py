@@ -3,7 +3,7 @@ from abc import ABCMeta
 import pygame
 
 from game import Colors
-from menu import MenuLayout, GameEntity, Actions
+from game.menu import MenuLayout, GameEntity, Actions
 
 
 class Button(GameEntity, metaclass=ABCMeta):
@@ -46,7 +46,6 @@ class PlayButton(Button):
 
     def click(self) -> str:
         self.stopped_mode = not self.stopped_mode
-        self.update()
         return Actions.CHANGE_STATE.name
 
     def update(self):
@@ -67,13 +66,35 @@ class HelpButton(Button):
         super().__init__(MenuLayout.HELP_BUTTON_SIZE)
 
     def click(self) -> str:
-        return Actions.NONE.name
+        return Actions.OPEN_RULES.name
 
     def update(self):
 
         self.generate_border()
 
         text_surface = self.font.render("?", True, Colors.GREEN)
+        text_surface_rect = text_surface.get_rect()
+        text_surface_x = (self.width - text_surface_rect[2]) // 2
+        text_surface_y = (self.height - text_surface_rect[3]) // 2
+        self.surface.blit(text_surface, dest=(text_surface_x, text_surface_y))
+
+
+class SpeedButton(Button):
+
+    def __init__(self, text: str, action: str):
+        self.text = text
+        self.action = action
+        self.font = pygame.font.Font(pygame.font.get_default_font(), MenuLayout.FONT_SIZE - 5)
+        super().__init__(MenuLayout.SPEED_BUTTONS_SIZE)
+
+    def click(self) -> str:
+        return self.action
+
+    def update(self):
+        self.surface.fill(MenuLayout.BACKGROUND_COLOR)
+        self.generate_border()
+
+        text_surface = self.font.render(self.text, True, Colors.GREEN)
         text_surface_rect = text_surface.get_rect()
         text_surface_x = (self.width - text_surface_rect[2]) // 2
         text_surface_y = (self.height - text_surface_rect[3]) // 2
