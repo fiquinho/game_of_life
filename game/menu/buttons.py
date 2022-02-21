@@ -62,7 +62,7 @@ class PlayButton(Button):
 class HelpButton(Button):
 
     def __init__(self):
-        self.font = pygame.font.Font(pygame.font.get_default_font(), 20)
+        self.font = pygame.font.Font(MenuLayout.FONT_FILE, 20)
         super().__init__(MenuLayout.HELP_BUTTON_SIZE)
 
     def click(self) -> str:
@@ -84,7 +84,7 @@ class SpeedButton(Button):
     def __init__(self, text: str, action: str):
         self.text = text
         self.action = action
-        self.font = pygame.font.Font(pygame.font.get_default_font(), MenuLayout.FONT_SIZE - 5)
+        self.font = pygame.font.Font(MenuLayout.FONT_FILE, MenuLayout.FONT_SIZE - 5)
         super().__init__(MenuLayout.SPEED_BUTTONS_SIZE)
 
     def click(self) -> str:

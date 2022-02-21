@@ -97,12 +97,12 @@ class Engine(object):
         self.stopped_time = not self.stopped_time
 
     def save_board(self):
-        board_path = filedialog.asksaveasfilename()
+        board_path = filedialog.asksaveasfilename(initialdir="game/boards")
         if board_path != "":
             self.board.save_board(board_path)
 
     def load_board(self):
-        board_path = filedialog.askopenfilename()
+        board_path = filedialog.askopenfilename(initialdir="game/boards")
         if board_path != "":
             self.board.load_board(board_path)
 

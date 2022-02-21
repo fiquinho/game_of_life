@@ -1,4 +1,5 @@
 from enum import Enum
+from pathlib import Path
 from typing import Tuple
 from abc import abstractmethod, ABCMeta
 
@@ -27,8 +28,8 @@ class MenuLayout:
     TEXT_BUTTON_SIZE = (70, 30)
     HELP_BUTTON_SIZE = (40, 40)
     BUTTONS_BORDER = 1
-    FONT_FILE = "game/assets/SourceCodePro-Regular.ttf"
-    SPEED_DISPLAY_FONT = "game/assets/digital-7.mono.ttf"
+    FONT_FILE = Path("game/assets/SourceCodePro-Regular.ttf")
+    SPEED_DISPLAY_FONT = Path("game/assets/digital-7.mono.ttf")
     FONT_SIZE = 18
     BACKGROUND_COLOR = Colors.BLACK
     MAIN_COLOR = Colors.GREEN
