@@ -10,12 +10,7 @@ BOARD_WINDOW = (GAME_WINDOW[0] - MENU_WINDOW[0], GAME_WINDOW[1])
 class Colors:
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
-    RED = (255, 0, 0)
-    IRIS = (67, 77, 223)
-    BLUE_JEANS = (67, 175, 252)
-    YELLOW = (255, 217, 128)
     GREEN = (57, 255, 20)
-    ORANGE = (255, 165, 0)
 
 
 class Actions(Enum):
