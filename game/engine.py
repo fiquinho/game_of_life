@@ -1,35 +1,32 @@
 import webbrowser
+import sys
 import tkinter as tk
 from tkinter import filedialog
-from typing import Optional
 from time import time
 
 import pygame
-from dataclasses import dataclass
 
-from game.configs import GAME_WINDOW, MENU_WINDOW, BOARD_WINDOW, Actions, BoardConfig
+from game.configs import WindowConfig, Actions, BoardConfig
 from game.board import Board
 from game.menu import Menu, SpeedDisplay
 
 
 root = tk.Tk()
 root.withdraw()
+pygame.init()
+pygame.display.set_caption("Game of Life")
 
 
 class Engine(object):
 
     def __init__(self):
-        self.window = pygame.display.set_mode(GAME_WINDOW)
+        self.window = pygame.display.set_mode(WindowConfig.GAME_WINDOW)
         self.current_speed = 5
-        self.rules_dir = "https://conwaylife.com/wiki/Conway's_Game_of_Life"
         self.stopped_time = True
 
-        self.menu = Menu(size=MENU_WINDOW, current_speed=self.current_speed)
-
-        pygame.display.set_caption("Game of Life")
-
+        self.menu = Menu(size=WindowConfig.MENU_WINDOW, current_speed=self.current_speed)
         self.board = Board(columns=BoardConfig.WIDTH, rows=BoardConfig.HEIGHT,
-                           cell_side=BoardConfig.CELL_SIDE, window_size=BOARD_WINDOW)
+                           cell_side=BoardConfig.CELL_SIDE, window_size=WindowConfig.BOARD_WINDOW)
 
     @property
     def actions(self):
@@ -89,24 +86,25 @@ class Engine(object):
     def none_action(self):
         pass
 
-    def open_rules(self):
-        webbrowser.open(self.rules_dir)
+    @staticmethod
+    def open_rules():
+        webbrowser.open(WindowConfig.RULES_DIR)
 
     def clear_board(self):
         self.board.reset()
 
     def render(self):
-        self.board.render(self.window, position=(MENU_WINDOW[0], 0))
+        self.board.render(self.window, position=(WindowConfig.MENU_WINDOW[0], 0))
         self.menu.render(self.window, position=(0, 0))
         pygame.display.update()
 
     def handle_click(self, x: int, y: int):
-        if x < MENU_WINDOW[0]:
+        if x < WindowConfig.MENU_WINDOW[0]:
             action = self.menu.handle_click(x, y)
             self.actions[action]()
         else:
             if self.stopped_time:
-                board_x = x - MENU_WINDOW[0]
+                board_x = x - WindowConfig.MENU_WINDOW[0]
                 self.board.handle_click(board_x, y)
 
     def run_game(self, render: bool = False):
@@ -122,7 +120,8 @@ class Engine(object):
             for event in pygame.event.get():
                 # Checks if the red button in the corner of the window is clicked
                 if event.type == pygame.QUIT:
-                    run = False  # Ends the game loop
+                    pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.handle_click(event.pos[0], event.pos[1])
