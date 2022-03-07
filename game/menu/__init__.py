@@ -1,4 +1,3 @@
-from .menu_utils import MenuLayout, GameEntity, Actions
-from .menu_utils import LineSeparator, SpeedDisplay, SpeedTitle
-from .buttons import HelpButton, TextButton, PlayButton
+from .menu_utils import LineSeparator, SpeedDisplay, SpeedTitle, GameEntity
+from .buttons import HelpButton, TextButton, PlayButton, SpeedButton
 from .menu import Menu

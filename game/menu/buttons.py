@@ -2,8 +2,8 @@ from abc import ABCMeta
 
 import pygame
 
-from game import Colors
-from game.menu import MenuLayout, GameEntity, Actions
+from game.configs import Colors, MenuLayout, Actions
+from game.menu import GameEntity
 
 
 class Button(GameEntity, metaclass=ABCMeta):

@@ -1,9 +1,8 @@
 from typing import Tuple, Dict
 
-from game.cell import Colors
-from game.menu import GameEntity, PlayButton, TextButton, Actions, HelpButton
-from game.menu import LineSeparator, SpeedDisplay, SpeedTitle
-from game.menu.buttons import SpeedButton
+from game.configs import Actions, Colors
+from game.menu import GameEntity, PlayButton, TextButton, HelpButton
+from game.menu import LineSeparator, SpeedDisplay, SpeedTitle, SpeedButton
 
 
 class MenuManager:

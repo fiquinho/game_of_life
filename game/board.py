@@ -5,7 +5,8 @@ from pathlib import Path
 import numpy as np
 from pygame import Surface
 
-from .cell import Cell, Colors
+from game.cell import Cell
+from game.configs import Colors
 
 
 class CellPosition(object):
