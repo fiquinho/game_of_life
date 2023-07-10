@@ -2,9 +2,11 @@ from enum import Enum
 from pathlib import Path
 
 
-GAME_WINDOW = (900, 600)
-MENU_WINDOW = (100, GAME_WINDOW[1])
-BOARD_WINDOW = (GAME_WINDOW[0] - MENU_WINDOW[0], GAME_WINDOW[1])
+class WindowConfig:
+    GAME_WINDOW = (900, 600)
+    MENU_WINDOW = (100, GAME_WINDOW[1])
+    BOARD_WINDOW = (GAME_WINDOW[0] - MENU_WINDOW[0], GAME_WINDOW[1])
+    RULES_DIR = "https://conwaylife.com/wiki/Conway's_Game_of_Life"
 
 
 class Colors:

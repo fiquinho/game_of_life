@@ -8,27 +8,47 @@ from game.menu import LineSeparator, SpeedDisplay, SpeedTitle, SpeedButton
 class MenuManager:
 
     def __init__(self, size: Tuple[int, int]):
+        """Manages positions for entities in the menu as well as the
+        clicks on those entities.
+
+        :param size: The size of the menu in pixels
+        """
         self.width, self.height = size
         self.entities_distance = 15
         self.occupied_height = 0
         self.entities: Dict[Tuple[int, int], GameEntity] = {}
 
     def next_vertical_position(self):
+        """The next vertical position for a stacked entity."""
         return self.occupied_height + self.entities_distance
 
     def add_free_entity(self, entity: GameEntity, position: Tuple[int, int]):
+        """Adds an entity to the manager in any position.
+
+        :param entity: The entity to add
+        :param position: Where the entity will be placed
+        """
         self.entities.update({position: entity})
 
     def add_stacked_entity(self, entity: GameEntity):
         """Adds an entity to the entities stack from top to bottom. It centers the
-        entity in the horizontal axis."""
+        entity in the horizontal axis. Updates the current occupied_height.
+
+        :param entity: The entity to add
+        """
         position = ((self.width - entity.width) // 2, self.next_vertical_position())
 
         self.add_free_entity(entity, position)
         self.occupied_height = self.next_vertical_position() + entity.height
 
     def handle_click(self, x: int, y: int) -> str:
+        """Handles a click in the menu. Uses the click method of
+        the clicked entity.
 
+        :param x: Horizontal position
+        :param y: Vertical position
+        :return: The action to execute
+        """
         for position, entity in self.entities.items():
             if entity.surface.get_rect(topleft=position).collidepoint((x, y)):
                 action = entity.click()
