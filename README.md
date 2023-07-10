@@ -4,7 +4,7 @@ This is my own implementation of [Conway's Game of Life](https://conwaylife.com/
 in Python 3.6, using [PyGame](https://www.pygame.org/wiki/about) to render the application.
 
 
-![Game of Life](https://s10.gifyu.com/images/app.gif)
+![Game of Life](project_info/game_image.png)
 
 ## Usage
 
